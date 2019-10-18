@@ -15,6 +15,8 @@ ActiveRecord::Schema.define(version: 2019_10_18_203202) do
   create_table "appointments", force: :cascade do |t|
     t.string "day"
     t.string "time"
+    t.integer "price"
+    t.string "completion_status"
     t.integer "dog_owner_id"
     t.integer "dog_walker_id"
     t.datetime "created_at", precision: 6, null: false

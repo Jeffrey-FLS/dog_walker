@@ -1,6 +1,6 @@
 
 
-class Dog_Walker < ActiveRecord::Base
+class DogWalker < ActiveRecord::Base
   has_many :appointments
   has_many :dog_owners, through: :appointments
 
