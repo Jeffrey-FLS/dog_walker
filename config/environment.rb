@@ -1,5 +1,5 @@
 require 'bundler'
 Bundler.require
 
-ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'db/development.db')
+connection_details = YAML::load(File.open('config/database.yml'))
 require_all 'lib'
