@@ -7,5 +7,10 @@ def welcome
 end
 
 def user_login_create_input
-  puts ""
+  puts "Login or Create Account"
+  # puts
 end
+
+welcome
+user_login_create_input
+

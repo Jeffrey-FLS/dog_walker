@@ -9,8 +9,6 @@ class DogOwner < ActiveRecord::Base
 
   has_one :account
 
-  def password_authentication(username, password)
-    
-  end
+
 
 end
