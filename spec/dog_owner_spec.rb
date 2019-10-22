@@ -1,5 +1,5 @@
 require_relative 'spec_helper'
-require_relative '../app/models/dog_owner'
+require_relative '../lib/models/er'
 
 describe DogOwner do
 
