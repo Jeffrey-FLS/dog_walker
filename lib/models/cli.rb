@@ -1,6 +1,4 @@
 
-# require "tty-prompt"
-
 class Cli
   attr_accessor :dog_owner
 
@@ -16,49 +14,42 @@ class Cli
   end
 
   def login_or_create
-
-    check = PROMPT.select("Login or Create Account",["login", "create_account"])
-
-    if check == "login"
-      login
-    else
-      create_account
-    end
-puts "==================="
+    check = PROMPT.select("Login or Create Account",["login", "create account"])
+    check == "login" ? login : create_account
 
     if @dog_owner.nil?
       puts "Sorry, Username or Password is wrong. Please try again"
       login
     end
-
   end
 
   def login
-    puts "Username?"
-    username = gets.chomp
+    username = PROMPT.ask("Enter Username:")
     password = PROMPT.mask("Enter Password:")
-    #password = gets.chomp
 
     @dog_owner = DogOwner.username_password_auth(username, password)
 
-    if !@dog_owner.nil?
+    unless @dog_owner.nil?
       puts "DOG OWNER IS #{@dog_owner.name}"
     end
   end
 
+
   def create_account
-    puts "Enter your username"
-    username_input = gets.chomp 
-    password_inpt = PROMPT.mask("Enter your password") 
-    puts "Enter your Name"
-    name_inpt  = gets.chomp 
-    puts "Enter your Phone Number"
-    phone_inpt = gets.chomp.to_i
-    puts "Enter your Address"
-    address_inpt = gets.chomp
+    username = PROMPT.ask("Enter Username:")
+    password = PROMPT.mask("Enter your password")
+    name = PROMPT.ask("Enter your name")
+    phone_number = PROMPT.ask("Enter your phone number")
+    address = PROMPT.ask("Enter your address")
 
+    @dog_owner = DogOwner.create(
+        username: username,
+        password: password,
+        name: name,
+        phone_number: phone_number.to_i,
+        address: address
+    )
+
+    login_or_create
   end
-
-  
-
 end

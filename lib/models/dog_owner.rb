@@ -14,6 +14,10 @@ class DogOwner < ActiveRecord::Base
     find_by(username: username, password: password)
   end
 
+  # def self.create_account
+  #
+  # end
+
 
 
 
