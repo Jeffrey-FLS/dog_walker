@@ -9,9 +9,6 @@ class Cli
   def init
     welcome
     login_or_create
-    # schedule
-    # appointments
-
   end
 
   def welcome
@@ -19,7 +16,7 @@ class Cli
   end
 
   def login_or_create
-    # @dog_owner = nil
+
     check = PROMPT.select("Login or Create Account",["login", "create_account"])
 
     if check == "login"
@@ -27,44 +24,22 @@ class Cli
     else
       create_account
     end
-
+puts "==================="
 
     if @dog_owner.nil?
       puts "Sorry, Username or Password is wrong. Please try again"
       login
     end
 
-    # schedule
-
   end
 
-  # def user_login
-  #   user_pass = []
-  #
-  #   puts "Username?"
-  #   user_pass < gets.chomp
-  #   puts "Password?"
-  #   user_pass < gets.chomp
-  #
-  #   return user_pass
-  # end
-
   def login
-    # user_pass = []
-    # user_pass = user_login
-
     puts "Username?"
     username = gets.chomp
-    puts "Password?"
-    password = gets.chomp
+    password = PROMPT.mask("Enter Password:")
+    #password = gets.chomp
 
     @dog_owner = DogOwner.username_password_auth(username, password)
-
-    # while @dog_owner.nil?
-    #   puts "Sorry, Username or Password is wrong. Please try again"
-    #   user_pass = user_login
-    #   @dog_owner = DogOwner.username_password_auth(user_pass[0], user_pass[1])
-    # end
 
     if !@dog_owner.nil?
       puts "DOG OWNER IS #{@dog_owner.name}"
@@ -72,15 +47,18 @@ class Cli
   end
 
   def create_account
-    PROMPT.mask("Username? ")
+    puts "Enter your username"
+    username_input = gets.chomp 
+    password_inpt = PROMPT.mask("Enter your password") 
+    puts "Enter your Name"
+    name_inpt  = gets.chomp 
+    puts "Enter your Phone Number"
+    phone_inpt = gets.chomp.to_i
+    puts "Enter your Address"
+    address_inpt = gets.chomp
 
   end
 
-  def schedule
-    appointments
-  end
-
-  def appointments
-  end
+  
 
 end
