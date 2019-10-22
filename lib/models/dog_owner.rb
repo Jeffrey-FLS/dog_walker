@@ -10,6 +10,11 @@ class DogOwner < ActiveRecord::Base
   has_one :account
 
 
+  def self.username_password_auth(username, password)
+    find_by(username: username, password: password)
+  end
+
+
 
 
 end
