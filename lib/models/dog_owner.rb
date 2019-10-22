@@ -7,4 +7,9 @@ class DogOwner < ActiveRecord::Base
   has_many :reviews
   has_many :dog_walkers, through: :reviews
 
+  has_one :account
+
+
+
+
 end
