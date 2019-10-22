@@ -5,20 +5,31 @@ class Cli
   PROMPT = TTY::Prompt.new
 
   def init
-    welcome
-    login_or_create
+      welcome
+      login_or_create
+      menu
   end
 
   def welcome
-    puts "Welcome to Wag part 2"
+    puts "Welcome to Wag part 2 \n\n"
   end
 
   def login_or_create
-    check = PROMPT.select("Login or Create Account",["login", "create account"])
-    check == "login" ? login : create_account
+    check = PROMPT.select("Login or Create Account",[
+        "login", "create account", "exit"
+    ])
+
+    case check
+    when "login"
+      login
+    when "create account"
+      create_account
+    when "exit"
+      exit_cli
+    end
 
     if @dog_owner.nil?
-      puts "Sorry, Username or Password is wrong. Please try again"
+      puts "Sorry, Username or Password is wrong. Please try again \n"
       login
     end
   end
@@ -52,4 +63,47 @@ class Cli
 
     login_or_create
   end
+
+  def menu
+    check = PROMPT.select("Login or Create Account",[
+        "View Schedule", "Schedule Appointment", "Reschedule Appointment", "Cancel Appoinment", "exit"
+    ])
+
+    case check
+    when "View Schedule"
+      view_schedule
+    when "Schedule Appoinment"
+      schedule_appointment
+    when "Reschedule Appointment"
+      reschedule_appointment
+    when "Cancel Appoinment"
+      cancel_appoinment
+    when "exit"
+      exit_cli
+    end
+
+    # check == "login" ? login : create_account
+  end
+
+  def view_schedule
+
+  end
+
+  def schedule_appointment
+    puts "schedule"
+  end
+
+  def reschedule_appointment
+    puts "======"
+  end
+
+  def cancel_appoinment
+    puts ",,,,,,,,,,,"
+  end
+
+  def exit_cli
+    puts "Thanks for the visit, Goodbye"
+    exit
+  end
+
 end
