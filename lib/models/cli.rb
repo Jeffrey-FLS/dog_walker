@@ -1,17 +1,35 @@
 
-class Cli
+class CLI
   attr_accessor :dog_owner
 
   PROMPT = TTY::Prompt.new
 
   def init
       welcome
+      user_owner_walker
       login_or_create
       menu
   end
 
   def welcome
-    puts "Welcome to Wag part 2 \n\n"
+    puts "\n\n Welcome to Wag part 2 \n\n"
+    # system "figlet Welcome to Wag part 2"
+  end
+
+  def user_owner_walker
+    check = PROMPT.select("Are you the Dog Owner or Dog Walker?",[
+        "Owner", "Walker", "exit"
+    ])
+
+    case check
+    when "Owner"
+      DogOwnerCLI.init
+    when "Walker"
+      create_account
+    when "exit"
+      exit_cli
+    end
+
   end
 
   def login_or_create
@@ -86,7 +104,7 @@ class Cli
   end
 
   def view_schedule
-
+    puts "view method"
   end
 
   def schedule_appointment

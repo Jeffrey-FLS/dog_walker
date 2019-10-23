@@ -1,5 +1,5 @@
 require_relative '../config/../config/environment'
 require 'pry'
 
-cli = Cli.new
+cli = CLI.new
 cli.init
