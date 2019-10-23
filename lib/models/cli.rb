@@ -1,24 +1,53 @@
 
-class Cli
+class CLI
   attr_accessor :dog_owner
 
   PROMPT = TTY::Prompt.new
 
   def init
-    welcome
-    login_or_create
+      welcome
+      user_owner_walker
+      login_or_create
+      menu
   end
 
   def welcome
-    puts "Welcome to Wag part 2"
+    puts "\n\n Welcome to Wag part 2 \n\n"
+    # system "figlet Welcome to Wag part 2"
+  end
+
+  def user_owner_walker
+    check = PROMPT.select("Are you the Dog Owner or Dog Walker?",[
+        "Owner", "Walker", "exit"
+    ])
+
+    case check
+    when "Owner"
+      DogOwnerCLI.init
+    when "Walker"
+      create_account
+    when "exit"
+      exit_cli
+    end
+
   end
 
   def login_or_create
-    check = PROMPT.select("Login or Create Account",["login", "create account"])
-    check == "login" ? login : create_account
+    check = PROMPT.select("Login or Create Account",[
+        "login", "create account", "exit"
+    ])
+
+    case check
+    when "login"
+      login
+    when "create account"
+      create_account
+    when "exit"
+      exit_cli
+    end
 
     if @dog_owner.nil?
-      puts "Sorry, Username or Password is wrong. Please try again"
+      puts "Sorry, Username or Password is wrong. Please try again \n"
       login
     end
   end
@@ -52,4 +81,47 @@ class Cli
 
     login_or_create
   end
+
+  def menu
+    check = PROMPT.select("Login or Create Account",[
+        "View Schedule", "Schedule Appointment", "Reschedule Appointment", "Cancel Appoinment", "exit"
+    ])
+
+    case check
+    when "View Schedule"
+      view_schedule
+    when "Schedule Appoinment"
+      schedule_appointment
+    when "Reschedule Appointment"
+      reschedule_appointment
+    when "Cancel Appoinment"
+      cancel_appoinment
+    when "exit"
+      exit_cli
+    end
+
+    # check == "login" ? login : create_account
+  end
+
+  def view_schedule
+    puts "view method"
+  end
+
+  def schedule_appointment
+    puts "schedule"
+  end
+
+  def reschedule_appointment
+    puts "======"
+  end
+
+  def cancel_appoinment
+    puts ",,,,,,,,,,,"
+  end
+
+  def exit_cli
+    puts "Thanks for the visit, Goodbye"
+    exit
+  end
+
 end
