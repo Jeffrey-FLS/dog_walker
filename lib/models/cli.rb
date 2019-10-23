@@ -7,8 +7,8 @@ class CLI
   def init
       welcome
       user_owner_walker
-      login_or_create
-      menu
+      # login_or_create
+      # menu
   end
 
   def welcome
@@ -25,14 +25,14 @@ class CLI
     when "Owner"
       DogOwnerCLI.init
     when "Walker"
-      create_account
+      DogWalkerCLI.init
     when "exit"
       exit_cli
     end
 
   end
 
-  def login_or_create
+  def self.login_or_create
     check = PROMPT.select("Login or Create Account",[
         "login", "create account", "exit"
     ])
@@ -46,80 +46,77 @@ class CLI
       exit_cli
     end
 
-    if @dog_owner.nil?
+    if @dog_owner.nil? && @dog_walker.nil?
       puts "Sorry, Username or Password is wrong. Please try again \n"
       login
     end
   end
 
-  def login
+  def self.login
     username = PROMPT.ask("Enter Username:")
     password = PROMPT.mask("Enter Password:")
 
-    @dog_owner = DogOwner.username_password_auth(username, password)
+    return [username,password]
 
-    unless @dog_owner.nil?
-      puts "DOG OWNER IS #{@dog_owner.name}"
-    end
+    # return arr_user_pass
+    # return login
   end
 
 
-  def create_account
+  def self.create_account
     username = PROMPT.ask("Enter Username:")
     password = PROMPT.mask("Enter your password")
     name = PROMPT.ask("Enter your name")
     phone_number = PROMPT.ask("Enter your phone number")
     address = PROMPT.ask("Enter your address")
 
-    @dog_owner = DogOwner.create(
-        username: username,
-        password: password,
-        name: name,
-        phone_number: phone_number.to_i,
-        address: address
-    )
-
-    login_or_create
+    return [
+        username,
+        password,
+        name,
+        phone_number,
+        address
+    ]
   end
 
-  def menu
-    check = PROMPT.select("Login or Create Account",[
-        "View Schedule", "Schedule Appointment", "Reschedule Appointment", "Cancel Appoinment", "exit"
-    ])
-
-    case check
-    when "View Schedule"
-      view_schedule
-    when "Schedule Appoinment"
-      schedule_appointment
-    when "Reschedule Appointment"
-      reschedule_appointment
-    when "Cancel Appoinment"
-      cancel_appoinment
-    when "exit"
-      exit_cli
-    end
-
-    # check == "login" ? login : create_account
-  end
-
-  def view_schedule
+  # def menu
+  #   check = PROMPT.select("Login or Create Account",[
+  #       "View Schedule", "Schedule Appointment", "Reschedule Appointment", "Cancel Appoinment", "exit"
+  #   ])
+  #
+  #   case check
+  #   when "View Schedule"
+  #     view_schedule
+  #   when "Schedule Appoinment"
+  #     schedule_appointment
+  #   when "Reschedule Appointment"
+  #     reschedule_appointment
+  #   when "Cancel Appoinment"
+  #     cancel_appoinment
+  #   when "exit"
+  #     exit_cli
+  #   end
+  #
+  #   # check == "login" ? login : create_account
+  # end
+  #
+  def self.view_schedule
     puts "view method"
   end
+  #
+  # def schedule_appointment
+  #   puts "schedule"
+  # end
+  #
+  # def reschedule_appointment
+  #   puts "======"
+  # end
+  #
+  # def cancel_appoinment
+  #   puts ",,,,,,,,,,,"
+  # end
 
-  def schedule_appointment
-    puts "schedule"
-  end
-
-  def reschedule_appointment
-    puts "======"
-  end
-
-  def cancel_appoinment
-    puts ",,,,,,,,,,,"
-  end
-
-  def exit_cli
+  def self.exit_cli
     puts "Thanks for the visit, Goodbye"
     exit
   end

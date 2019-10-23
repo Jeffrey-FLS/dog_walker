@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_23_181019) do
+ActiveRecord::Schema.define(version: 2019_10_23_211633) do
 
   create_table "accounts", force: :cascade do |t|
     t.string "username"
@@ -31,6 +31,16 @@ ActiveRecord::Schema.define(version: 2019_10_23_181019) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "available_work_days", force: :cascade do |t|
+    t.string "month"
+    t.string "day"
+    t.string "starting_time"
+    t.integer "working_hours"
+    t.integer "dog_walker_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "dog_owners", force: :cascade do |t|
     t.string "username"
     t.string "password"
@@ -43,6 +53,9 @@ ActiveRecord::Schema.define(version: 2019_10_23_181019) do
     t.string "name"
     t.integer "phone_number"
     t.text "available_days"
+    t.string "username"
+    t.string "password"
+    t.string "address"
   end
 
   create_table "reviews", force: :cascade do |t|
