@@ -48,27 +48,31 @@ class DogOwnerCLI < CLI
   end
 
   def self.schedule_appointment
-    puts "HEEELLLOOO"
-    # binding.pry
     availability_list = AvailableWorkDay.availability_list
     scheduled_list = availability_list.map {|schedule| schedule[0]}
-    # binding.pry
-    check = PROMPT.select("Login or Create Account", scheduled_list)
+    check = PROMPT.select("List of Schedules", scheduled_list)
 
     availability_list.each do |schedule|
-      # binding.pry
-
       if schedule[0] == check
-        AvailableWorkDay.find(schedule[1])
+        available_schedule = AvailableWorkDay.find(schedule[1])
         # DogWalker.find_dog_walker_id
-        binding.pry
 
-        # Appointment.create()
+        Appointment.create(
+               day: available_schedule.day,
+               time: available_schedule.starting_time,
+               price: 50,
+               completion_status: 'Done',
+               dog_owner_id: @dog_owner.id,
+               dog_walker_id: schedule[2]
+        )
       end
     end
 
+  end
 
-
+  def self.view_schedule
+    binding.pry
+    # @dog_owner.
   end
 
   def reschedule_appointment
