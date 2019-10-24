@@ -5,7 +5,6 @@ module TimeCalc
     list = []
 
     schedules.each do |able|
-      # binding.pry
       time_split_arr = able.starting_time.split(":")
       time_calc = time_split_arr[0].to_i + able.working_hours
 

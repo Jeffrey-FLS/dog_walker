@@ -35,7 +35,7 @@ class DogWalkerCLI < CLI
 
     case check
     when "View Schedule"
-      view_schedule(@dog_walker.available_work_days)
+      view_schedule(@dog_walker.available_work_days, false)
     when "Set Available Days"
       set_available_days
     when "Change Availability"

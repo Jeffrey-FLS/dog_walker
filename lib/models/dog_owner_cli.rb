@@ -36,7 +36,8 @@ class DogOwnerCLI < CLI
 
     case check
     when "View Schedule"
-      view_schedule(@dog_owner.appointments)
+      view_schedule(@dog_owner.appointments, true)
+      menu
     when "Schedule Appointment"
       schedule_appointment
     when "Reschedule Appointment"
@@ -74,26 +75,12 @@ class DogOwnerCLI < CLI
       end
     end
 
+    menu
   end
 
-  # def self.view_schedule
-  #   include TimeCalc
-  #
-  #   # Make a condition that will return "no appointments made" under a new user without a set appointment
-  #   # binding.pry
-  #
-  #   availability_list = TimeCalc.schedule_list(@dog_owner.appointments)
-  #   scheduled_list = availability_list.map {|schedule| schedule[0]}
-  #   check = PROMPT.select("List of Schedules", scheduled_list)
-  # end
-
   def self.reschedule_appointment
-
-    schedule_id = view_schedule(@dog_owner.appointments)
-
-    check = PROMPT.select("Are you sure you want to reschedule?",[
-        "Yes", "No"
-    ])
+    schedule_id = view_schedule(@dog_owner.appointments, true)
+    check = PROMPT.select("Are you sure you want to reschedule?",["Yes", "No"])
 
     if check == "Yes"
       Appointment.destroy(schedule_id)
@@ -101,32 +88,8 @@ class DogOwnerCLI < CLI
     else
       menu
     end
-
-
-
-    # availability_list = AvailableWorkDay.availability_list
-    # scheduled_list = availability_list.map {|schedule| schedule[0]}
-    # check = PROMPT.select("List of Schedules", scheduled_list)
-    #
-    # availability_list.each do |schedule|
-    #   if schedule[0] == check
-    #     available_schedule = AvailableWorkDay.find(schedule[1])
-    #     # DogWalker.find_dog_walker_id
-    #
-    #     # binding.pry
-    #     Appointment.create(
-    #         month: available_schedule.month,
-    #         day: available_schedule.day,
-    #         starting_time: available_schedule.starting_time,
-    #         working_hours: available_schedule.working_hours,
-    #         price: 50,
-    #         completion_status: '',
-    #         dog_owner_id: @dog_owner.id,
-    #         dog_walker_id: schedule[2]
-    #     )
-    #   end
-    # end
   end
+
 
   def cancel_appoinment
     puts ",,,,,,,,,,,"
