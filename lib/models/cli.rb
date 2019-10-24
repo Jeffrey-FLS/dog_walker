@@ -71,6 +71,21 @@ class CLI
     ]
   end
 
+  def self.view_schedule(appointment_list)
+    include TimeCalc
+    # Make a condition that will return "no appointments made" under a new user without a set appointment
+    availability_list = TimeCalc.schedule_list(appointment_list)
+    scheduled_list = availability_list.map {|schedule| schedule[0]}
+    check = PROMPT.select("List of Schedules", scheduled_list)
+
+    availability_list.each do |schedule|
+      if schedule[0] == check
+        return AvailableWorkDay.find(schedule[1]).id
+      end
+
+    end
+  end
+
   def self.exit_cli
     puts "Thanks for the visit, Goodbye"
     exit

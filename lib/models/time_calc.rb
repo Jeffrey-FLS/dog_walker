@@ -1,10 +1,11 @@
 
 module TimeCalc
 
-  def self.availability_list
+  def self.schedule_list(schedules)
     list = []
 
-    all.each do |able|
+    schedules.each do |able|
+      # binding.pry
       time_split_arr = able.starting_time.split(":")
       time_calc = time_split_arr[0].to_i + able.working_hours
 
