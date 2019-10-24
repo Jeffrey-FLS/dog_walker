@@ -1,6 +1,7 @@
 
 class DogOwnerCLI < CLI
   attr_accessor :dog_owner
+  # include TimeCalc
 
   def self.init
     login_or_create
@@ -35,7 +36,8 @@ class DogOwnerCLI < CLI
 
     case check
     when "View Schedule"
-      view_schedule
+      view_schedule(@dog_owner.appointments, true)
+      menu
     when "Schedule Appointment"
       schedule_appointment
     when "Reschedule Appointment"
@@ -48,32 +50,46 @@ class DogOwnerCLI < CLI
   end
 
   def self.schedule_appointment
-    puts "HEEELLLOOO"
-    # binding.pry
     availability_list = AvailableWorkDay.availability_list
     scheduled_list = availability_list.map {|schedule| schedule[0]}
-    # binding.pry
-    check = PROMPT.select("Login or Create Account", scheduled_list)
+    check = PROMPT.select("List of Schedules", scheduled_list)
 
     availability_list.each do |schedule|
-      # binding.pry
-
       if schedule[0] == check
-        AvailableWorkDay.find(schedule[1])
+        available_schedule = AvailableWorkDay.find(schedule[1])
         # DogWalker.find_dog_walker_id
-        binding.pry
 
-        # Appointment.create()
+        # binding.pry
+        Appointment.create(
+               month: available_schedule.month,
+               day: available_schedule.day,
+               starting_time: available_schedule.starting_time,
+               working_hours: available_schedule.working_hours,
+               price: 50,
+               completion_status: '',
+               dog_owner_id: @dog_owner.id,
+               dog_walker_id: schedule[2]
+        )
+
+        AvailableWorkDay.destroy(available_schedule.id)
       end
     end
 
-
-
+    menu
   end
 
-  def reschedule_appointment
-    puts "======"
+  def self.reschedule_appointment
+    schedule_id = view_schedule(@dog_owner.appointments, true)
+    check = PROMPT.select("Are you sure you want to reschedule?",["Yes", "No"])
+
+    if check == "Yes"
+      Appointment.destroy(schedule_id)
+      schedule_appointment
+    else
+      menu
+    end
   end
+
 
   def cancel_appoinment
     puts ",,,,,,,,,,,"

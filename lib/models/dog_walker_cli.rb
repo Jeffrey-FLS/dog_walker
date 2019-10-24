@@ -35,7 +35,7 @@ class DogWalkerCLI < CLI
 
     case check
     when "View Schedule"
-      view_schedule
+      view_schedule(@dog_walker.available_work_days, false)
     when "Set Available Days"
       set_available_days
     when "Change Availability"
@@ -79,11 +79,25 @@ class DogWalkerCLI < CLI
         working_hours: shift_hours,
         dog_walker_id: @dog_walker.id
     )
+
+    menu
   end
 
   def self.week_day_calc(weeks, days, week, day)
     return ((days.find_index(day) + 1) * (weeks.find_index(week) + 1))
   end
+
+
+  # def self.view_schedule
+  #   include TimeCalc
+  #
+  #   # Make a condition that will return "no appointments made" under a new user without a set appointment
+  #   # binding.pry
+  #
+  #   availability_list = TimeCalc.schedule_list(@dog_walker.appointments)
+  #   scheduled_list = availability_list.map {|schedule| schedule[0]}
+  #   check = PROMPT.select("List of Schedules", scheduled_list)
+  # end
 
   def change_availability
     puts "======"

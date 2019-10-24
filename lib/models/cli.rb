@@ -1,14 +1,10 @@
 
 class CLI
-  # attr_accessor :dog_owner
-
   PROMPT = TTY::Prompt.new
 
   def init
       welcome
       user_owner_walker
-      # login_or_create
-      # menu
   end
 
   def welcome
@@ -29,7 +25,6 @@ class CLI
     when "exit"
       exit_cli
     end
-
   end
 
   def self.login_or_create
@@ -57,9 +52,6 @@ class CLI
     password = PROMPT.mask("Enter Password:")
 
     return [username,password]
-
-    # return arr_user_pass
-    # return login
   end
 
 
@@ -79,46 +71,30 @@ class CLI
     ]
   end
 
-  # def menu
-  #   check = PROMPT.select("Login or Create Account",[
-  #       "View Schedule", "Schedule Appointment", "Reschedule Appointment", "Cancel Appoinment", "exit"
-  #   ])
-  #
-  #   case check
-  #   when "View Schedule"
-  #     view_schedule
-  #   when "Schedule Appoinment"
-  #     schedule_appointment
-  #   when "Reschedule Appointment"
-  #     reschedule_appointment
-  #   when "Cancel Appoinment"
-  #     cancel_appoinment
-  #   when "exit"
-  #     exit_cli
-  #   end
-  #
-  #   # check == "login" ? login : create_account
-  # end
-  #
-  def self.view_schedule
-    puts "view method"
+  def self.view_schedule(appointment_list, is_appointment)
+    include TimeCalc
+    # Make a condition that will return "no appointments made" under a new user without a set appointment
+    availability_list = TimeCalc.schedule_list(appointment_list)
+    scheduled_list = availability_list.map {|schedule| schedule[0]}
+    check = PROMPT.select("List of Availabilities - Select any schedule to exit", scheduled_list)
+
+    availability_list.each do |schedule|
+      if schedule[0] == check
+        if is_appointment
+          return Appointment.find(schedule[1]).id
+        else
+          return AvailableWorkDay.find(schedule[1]).id
+        end
+    end
   end
-  #
-  # def schedule_appointment
-  #   puts "schedule"
-  # end
-  #
-  # def reschedule_appointment
-  #   puts "======"
-  # end
-  #
-  # def cancel_appoinment
-  #   puts ",,,,,,,,,,,"
-  # end
+  end
 
   def self.exit_cli
     puts "Thanks for the visit, Goodbye"
     exit
   end
 
+  def self.empty
+    check = PROMPT.select("List of Availabilities - Select any schedule to exit", ["main menu"])
+  end
 end
