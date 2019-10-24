@@ -1,6 +1,6 @@
 
 class CLI
-  attr_accessor :dog_owner
+  # attr_accessor :dog_owner
 
   PROMPT = TTY::Prompt.new
 

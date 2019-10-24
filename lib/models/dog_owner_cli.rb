@@ -11,14 +11,9 @@ class DogOwnerCLI < CLI
     arr_user_owner = super
     @dog_owner = DogOwner.username_password_auth(arr_user_owner[0], arr_user_owner[1])
 
-
-
-
     unless @dog_owner.nil?
         puts "DOG OWNER IS #{@dog_owner.name}"
     end
-
-    # menu
   end
 
   def self.create_account
@@ -41,7 +36,7 @@ class DogOwnerCLI < CLI
     case check
     when "View Schedule"
       view_schedule
-    when "Schedule Appoinment"
+    when "Schedule Appointment"
       schedule_appointment
     when "Reschedule Appointment"
       reschedule_appointment
@@ -50,12 +45,30 @@ class DogOwnerCLI < CLI
     when "exit"
       exit_cli
     end
-
-    # check == "login" ? login : create_account
   end
 
-  def schedule_appointment
-    puts "schedule"
+  def self.schedule_appointment
+    puts "HEEELLLOOO"
+    # binding.pry
+    availability_list = AvailableWorkDay.availability_list
+    scheduled_list = availability_list.map {|schedule| schedule[0]}
+    # binding.pry
+    check = PROMPT.select("Login or Create Account", scheduled_list)
+
+    availability_list.each do |schedule|
+      # binding.pry
+
+      if schedule[0] == check
+        AvailableWorkDay.find(schedule[1])
+        # DogWalker.find_dog_walker_id
+        binding.pry
+
+        # Appointment.create()
+      end
+    end
+
+
+
   end
 
   def reschedule_appointment
