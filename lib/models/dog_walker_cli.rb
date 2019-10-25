@@ -11,9 +11,9 @@ class DogWalkerCLI < CLI
     arr_user_owner = super
     @dog_walker = DogWalker.username_password_auth(arr_user_owner[0], arr_user_owner[1])
 
-    # unless @dog_walker.nil?
-    #   puts "DOG WALKER IS #{@dog_walker.name}"
-    # end
+    unless @dog_walker.nil?
+      puts "Welcome #{@dog_walker.name}!"
+    end
   end
 
   def self.create_account
@@ -35,6 +35,8 @@ class DogWalkerCLI < CLI
 
     case check
     when "View My Work Schedule"
+      @dog_walker.reload
+
       if !@dog_walker.available_work_days.empty?
         view_schedule(@dog_walker.available_work_days, false)
         menu
@@ -42,7 +44,7 @@ class DogWalkerCLI < CLI
         empty
       end
     when "Set Available Days"
-      set_available_days
+      create_new_availability
     when "Change Availability"
       change_availability
     when "Cancel Availability"
@@ -79,11 +81,16 @@ class DogWalkerCLI < CLI
 
     weekday = week_day_calc(weeks, days, week, day)
 
+    return [month, weekday, time, shift_hours]
+  end
+
+  def self.create_new_availability
+    arr = set_available_days
     AvailableWorkDay.create(
-        month: month,
-        day: weekday,
-        starting_time: time,
-        working_hours: shift_hours,
+        month: arr[0],          #month
+        day: arr[1],            #weekday
+        starting_time: arr[2],  #time
+        working_hours: arr[3],  #shift_hours
         dog_walker_id: @dog_walker.id
     )
 
@@ -94,23 +101,55 @@ class DogWalkerCLI < CLI
     return ((days.find_index(day) + 1) * (weeks.find_index(week) + 1))
   end
 
+  def self.change_availability
+  if !@dog_walker.available_work_days.empty?
+      schedule_id = view_schedule(@dog_walker.available_work_days, false)
 
-  # def self.view_schedule
-  #   include TimeCalc
-  #
-  #   # Make a condition that will return "no appointments made" under a new user without a set appointment
-  #   # binding.pry
-  #
-  #   availability_list = TimeCalc.schedule_list(@dog_walker.appointments)
-  #   scheduled_list = availability_list.map {|schedule| schedule[0]}
-  #   check = PROMPT.select("List of Schedules", scheduled_list)
-  # end
+      if !schedule_id.nil?
+        check = PROMPT.yes?("Are you sure you want to edit your schedule?")
 
-  def change_availability
-    puts "======"
+        if check
+          arr = set_available_days
+          available_instance = AvailableWorkDay.find(schedule_id)
+
+          available_instance.update(
+              month: arr[0],          #month
+              day: arr[1],            #weekday
+              starting_time: arr[2],  #time
+              working_hours: arr[3],  #shift_hours
+              dog_walker_id: @dog_walker.id
+          )
+
+          menu
+        else
+          change_availability
+        end
+      else
+        menu
+      end
+    else
+      empty
+    end
   end
 
-  def cancel_availability
-    puts ",,,,,,,,,,,"
+  def self.cancel_availability
+    if !@dog_walker.available_work_days.empty?
+      schedule_id = view_schedule(@dog_walker.available_work_days, false)
+
+      if !schedule_id.nil?
+        check = PROMPT.yes?("Are you sure you want to cancel your schedule?")
+
+        if check
+          AvailableWorkDay.destroy(schedule_id)
+          menu
+        else
+          cancel_availability
+        end
+      else
+        menu
+      end
+    else
+      empty
+    end
   end
 end

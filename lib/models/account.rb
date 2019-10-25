@@ -8,9 +8,4 @@ class Account < ActiveRecord::Base
     dog_owner = find_by(username: username, password: password)
     return dog_owner.dog_owner_id
   end
-
-  
-  
-
- 
 end

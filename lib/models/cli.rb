@@ -1,17 +1,17 @@
 class CLI
   PROMPT = TTY::Prompt.new
   RETURN = "return to main menu"
-  LOGOUT = "logout"
 
   def init
     welcome
     self.class.user_owner_walker
-    # user_owner_walker
   end
 
   def welcome
     system("clear")
-    puts "\n\n Welcome to Wag part 2 \n\n\n"
+    puts "\n\n"
+    system("dogsay WELCOME TO WAG PART 2!")
+    # puts "\n\n Welcome to Wag part 2 \n\n\n"
     # system "figlet Welcome to Wag part 2"
   end
 
@@ -83,15 +83,16 @@ class CLI
     availability_list = TimeCalc.schedule_list(appointment_list)
     scheduled_list = availability_list.map { |schedule| schedule[0] }
     scheduled_list << RETURN
-    # binding.pry
     check = PROMPT.select("List of schedules", scheduled_list)
 
     if check != RETURN
       availability_list.each do |schedule|
         if schedule[0] == check
           if is_appointment
+            scheduled_list = nil
             return Appointment.find(schedule[1]).id
           else
+            scheduled_list = nil
             return AvailableWorkDay.find(schedule[1]).id
           end
         end
@@ -104,7 +105,6 @@ class CLI
     @dog_owner = nil
     @dog_walker = nil
     user_owner_walker
-    # login_or_create
   end
 
   def self.exit_cli

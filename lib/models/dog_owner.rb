@@ -14,8 +14,4 @@ class DogOwner < ActiveRecord::Base
   def self.username_password_auth(username, password)
     find_by(username: username, password: password)
   end
-
-  # def self.availability_list
-  #
-  # end
 end

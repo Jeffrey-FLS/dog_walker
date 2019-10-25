@@ -1,6 +1,5 @@
 class DogOwnerCLI < CLI
   attr_accessor :dog_owner
-  # include TimeCalc
 
   def self.init
     login_or_create
@@ -11,9 +10,9 @@ class DogOwnerCLI < CLI
     arr_user_owner = super
     @dog_owner = DogOwner.username_password_auth(arr_user_owner[0], arr_user_owner[1])
 
-    # unless @dog_owner.nil?
-    #   puts "DOG OWNER IS #{@dog_owner.name}"
-    # end
+    unless @dog_owner.nil?
+      puts "Welcome #{@dog_owner.name}!"
+    end
   end
 
   def self.create_account
@@ -35,6 +34,8 @@ class DogOwnerCLI < CLI
 
     case check
     when "View My Appointments"
+       @dog_owner.reload
+
       if !@dog_owner.appointments.empty?
         view_schedule(@dog_owner.appointments, true)
         menu
@@ -53,10 +54,6 @@ class DogOwnerCLI < CLI
       exit_cli
     end
   end
-
-  # def self.view_schedule
-  #   super
-  # end
 
   def self.schedule_appointment
     availability_list = AvailableWorkDay.availability_list
@@ -100,7 +97,6 @@ class DogOwnerCLI < CLI
       schedule_id = view_schedule(@dog_owner.appointments, true)
       if !schedule_id.nil?
         check = PROMPT.yes?("Are you sure you want to reschedule?")
-        # binding.pry
 
         if check
           Appointment.destroy(schedule_id)
@@ -122,12 +118,10 @@ class DogOwnerCLI < CLI
       schedule_id = view_schedule(@dog_owner.appointments, true)
       if !schedule_id.nil?
         check = PROMPT.yes?("Are you sure you want to cancel your appointment?")
-        # binding.pry
 
         if check
           Appointment.destroy(schedule_id)
           menu
-          # schedule_appointment
         else
           cancel_appointment
         end

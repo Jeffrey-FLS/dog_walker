@@ -15,6 +15,7 @@ GEM
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
     diff-lcs (1.3)
+    dogsay (0.2.5)
     equatable (0.6.1)
     faker (2.6.0)
       i18n (>= 1.6, < 1.8)
@@ -79,6 +80,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  dogsay
   faker
   pry
   rake (= 12.3.2)
