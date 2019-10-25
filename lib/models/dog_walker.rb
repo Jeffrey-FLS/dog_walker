@@ -13,5 +13,4 @@ class DogWalker < ActiveRecord::Base
   def self.username_password_auth(username, password)
     find_by(username: username, password: password)
   end
-
 end
