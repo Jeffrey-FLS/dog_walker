@@ -1,4 +1,3 @@
-
 class DogOwnerCLI < CLI
   attr_accessor :dog_owner
   # include TimeCalc
@@ -12,9 +11,9 @@ class DogOwnerCLI < CLI
     arr_user_owner = super
     @dog_owner = DogOwner.username_password_auth(arr_user_owner[0], arr_user_owner[1])
 
-    unless @dog_owner.nil?
-        puts "DOG OWNER IS #{@dog_owner.name}"
-    end
+    # unless @dog_owner.nil?
+    #   puts "DOG OWNER IS #{@dog_owner.name}"
+    # end
   end
 
   def self.create_account
@@ -30,68 +29,113 @@ class DogOwnerCLI < CLI
   end
 
   def self.menu
-    check = PROMPT.select("Login or Create Account",[
-        "View Schedule", "Schedule Appointment", "Reschedule Appointment", "Cancel Appoinment", "exit"
+    check = PROMPT.select("\nMain Menu", [
+        "View My Appointments", "Schedule Appointment", "Reschedule Appointment", "Cancel Appointment", "logout", "exit"
     ])
 
     case check
-    when "View Schedule"
-      view_schedule(@dog_owner.appointments, true)
-      menu
+    when "View My Appointments"
+      if !@dog_owner.appointments.empty?
+        view_schedule(@dog_owner.appointments, true)
+        menu
+      else
+        empty
+      end
     when "Schedule Appointment"
       schedule_appointment
     when "Reschedule Appointment"
       reschedule_appointment
-    when "Cancel Appoinment"
-      cancel_appoinment
+    when "Cancel Appointment"
+      cancel_appointment
+    when "logout"
+      logout
     when "exit"
       exit_cli
     end
   end
 
+  # def self.view_schedule
+  #   super
+  # end
+
   def self.schedule_appointment
     availability_list = AvailableWorkDay.availability_list
-    scheduled_list = availability_list.map {|schedule| schedule[0]}
-    check = PROMPT.select("List of Schedules", scheduled_list)
 
-    availability_list.each do |schedule|
-      if schedule[0] == check
-        available_schedule = AvailableWorkDay.find(schedule[1])
-        # DogWalker.find_dog_walker_id
+    if !availability_list.empty?
+      scheduled_list = availability_list.map { |schedule| schedule[0] }
+      scheduled_list << RETURN
+      check = PROMPT.select("List of Schedules", scheduled_list)
 
-        # binding.pry
-        Appointment.create(
-               month: available_schedule.month,
-               day: available_schedule.day,
-               starting_time: available_schedule.starting_time,
-               working_hours: available_schedule.working_hours,
-               price: 50,
-               completion_status: '',
-               dog_owner_id: @dog_owner.id,
-               dog_walker_id: schedule[2]
-        )
+      if check != RETURN
+        availability_list.each do |schedule|
+          if schedule[0] == check
+            available_schedule = AvailableWorkDay.find(schedule[1])
 
-        AvailableWorkDay.destroy(available_schedule.id)
+            Appointment.create(
+                month: available_schedule.month,
+                day: available_schedule.day,
+                starting_time: available_schedule.starting_time,
+                working_hours: available_schedule.working_hours,
+                price: 50,
+                completion_status: '',
+                dog_owner_id: @dog_owner.id,
+                dog_walker_id: schedule[2]
+            )
+
+            AvailableWorkDay.destroy(available_schedule.id)
+            menu
+          end
+        end
+      else
+        menu
       end
+    else
+      empty
     end
-
-    menu
   end
+
 
   def self.reschedule_appointment
-    schedule_id = view_schedule(@dog_owner.appointments, true)
-    check = PROMPT.select("Are you sure you want to reschedule?",["Yes", "No"])
+    if !@dog_owner.appointments.empty?
+      schedule_id = view_schedule(@dog_owner.appointments, true)
+      if !schedule_id.nil?
+        check = PROMPT.yes?("Are you sure you want to reschedule?")
+        # binding.pry
 
-    if check == "Yes"
-      Appointment.destroy(schedule_id)
-      schedule_appointment
+        if check
+          Appointment.destroy(schedule_id)
+          schedule_appointment
+        else
+          reschedule_appointment
+        end
+      else
+        menu
+      end
     else
-      menu
+      empty
     end
   end
 
 
-  def cancel_appoinment
-    puts ",,,,,,,,,,,"
+  def self.cancel_appointment
+    if !@dog_owner.appointments.empty?
+      schedule_id = view_schedule(@dog_owner.appointments, true)
+      if !schedule_id.nil?
+        check = PROMPT.yes?("Are you sure you want to cancel your appointment?")
+        # binding.pry
+
+        if check
+          Appointment.destroy(schedule_id)
+          menu
+          # schedule_appointment
+        else
+          cancel_appointment
+        end
+      else
+        menu
+      end
+    else
+      empty
+    end
   end
 end

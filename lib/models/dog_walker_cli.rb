@@ -11,9 +11,9 @@ class DogWalkerCLI < CLI
     arr_user_owner = super
     @dog_walker = DogWalker.username_password_auth(arr_user_owner[0], arr_user_owner[1])
 
-    unless @dog_walker.nil?
-      puts "DOG WALKER IS #{@dog_walker.name}"
-    end
+    # unless @dog_walker.nil?
+    #   puts "DOG WALKER IS #{@dog_walker.name}"
+    # end
   end
 
   def self.create_account
@@ -29,19 +29,26 @@ class DogWalkerCLI < CLI
   end
 
   def self.menu
-    check = PROMPT.select("Login or Create Account",[
-        "View Schedule", "Set Available Days", "Change Availability", "Cancel Availability", "exit"
+    check = PROMPT.select("\nMain Menu",[
+        "View My Work Schedule", "Set Available Days", "Change Availability", "Cancel Availability", "logout", "exit"
     ])
 
     case check
-    when "View Schedule"
-      view_schedule(@dog_walker.available_work_days, false)
+    when "View My Work Schedule"
+      if !@dog_walker.available_work_days.empty?
+        view_schedule(@dog_walker.available_work_days, false)
+        menu
+      else
+        empty
+      end
     when "Set Available Days"
       set_available_days
     when "Change Availability"
       change_availability
     when "Cancel Availability"
       cancel_availability
+    when "logout"
+      logout
     when "exit"
       exit_cli
     end
